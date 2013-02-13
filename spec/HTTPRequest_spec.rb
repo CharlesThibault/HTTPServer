@@ -60,18 +60,13 @@ REQ
 	end
 
 	describe "#to_s" do
-		before(:each) do
-			@req.code = '200 GET HTTP/1.1'
-			@req.header = { 'Content-Length' => '4' }
-			@req.body = 'body'
-		end
-
 		it "to_s should return a String" do
 			@req.to_s.should be_a String
 		end
 
 		it "to_s should return HTTP request format" do
-			@req.to_s.should == "200 GET HTTP/1.1\nContent-Length: 4\n\nbody"
+			@req.to_s.should == "GET http://localhost/toto HTTP/1.1\nContent-Length: 4\n\nbody"
 		end
 	end
+
 end

@@ -29,17 +29,16 @@ loop do
   req = HTTP::Request.new(socket)
   res = HTTP::Response.new
 
-  if cookie = req.headers["Cookie"] and session_id = cookie.split('=')[1] and sessions[session_id]
-    sessions[session_id] << "request No#{request_number} #{req.path}"
+  if cookie = req.header["Cookie"] and session_id = cookie.split('=')[1] and sessions[session_id]
+    sessions[session_id] << "request No#{request_number}"
     res.write sessions[session_id].join("\n")
   else
-    res.headers["Set-Cookie"] = "session_id=#{session_id = generate_cookie}"
-    sessions[session_id] = ["request No#{request_number} #{req.path}"]
+    res.header["Set-Cookie"] = "session_id=#{session_id = generate_cookie}"
+    sessions[session_id] = ["request No#{request_number}"]
   end
   
   # response
-  res.code = "200"
-  res.code_message = "ok"
+  res.code = "200 HTTP/1.1 ok"
   socket.write res.to_s
   
   socket.close

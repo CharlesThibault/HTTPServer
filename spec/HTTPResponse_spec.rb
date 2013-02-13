@@ -1,9 +1,9 @@
-require '/home/charles/Documents/ruby/server_http_object/HTTP/HTTPResponse.rb'
+require '../HTTP/http'
 require 'socket'
 
-describe HTTPResponse do
+describe HTTP::Response do
 	before(:each) do
-		@res = HTTPResponse.new
+		@res = HTTP::Response.new
 	end
 
 	describe "#header" do
@@ -36,31 +36,17 @@ describe HTTPResponse do
 
 	 describe "#code" do
                 before(:each) do
-                        @res.code = '200 GET HTTP/1.1'
+                        @res.code = '200 HTTP/1.1 ok'
                 end
 
                 it "body should return a String" do
                         @res.code.should be_a String
                 end
 
-                it "body should return \'200 GET HTTP/1.1\'" do
-                        @res.code.should == '200 GET HTTP/1.1'
+                it "body should return \'200 HTTP/1.1 ok\'" do
+                        @res.code.should == '200 HTTP/1.1 ok'
                 end
         end
-
-	describe "#send" do
-		before(:each) do
-			@res.code = '200 HTTP/1.1 ok'
-			@res.header = { 'Content-Length' => '4'}
-			@res.body = 'body'
-		end
-
-		it "the write methode should be used by send methode" do
-			socket_double = double(TCPSocket)
-			socket_double.should_receive(:write).with("200 HTTP/1.1 ok\nContent-Length: 4\n\nbody")
-			@res.send(socket_double)						
-		end
-	end
 
 	describe "#to_s" do
 		before(:each) do

@@ -28,7 +28,6 @@ module HTTP
 		def parse_request(socket) 
 			# get first line
 			@code = socket.gets.chomp
-			puts @code
 			#get header
 			until (s = socket.gets.chomp).empty?				
 				k,v = s.split(": ")
@@ -46,18 +45,6 @@ module HTTP
 
 		def initialize
 			super
-		end
-
-		def send(socket)
-			response = String.new
-			response = "#{code}\n"
-
-			@header.each do |el|
-				response += "#{el.join(': ')}\n"
-			end
-			response += "\n#{body}"
-
-			socket.write(response)
 		end
 	end
 end
