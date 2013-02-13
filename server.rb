@@ -1,5 +1,5 @@
 require 'socket'
-require './http.rb'
+require './HTTP/http'
 
 port = 8080
 server = TCPServer.open(port)
