@@ -34,6 +34,27 @@ describe HTTP::Response do
 		end
 	end
 
+	describe "#write" do
+		it "write should add content to the request\'body" do
+			@res.write 'test write'
+			@res.body.should == 'test write'
+		end 
+	end
+
+	describe "#code_message" do
+		before(:each) do
+                        @res.code_message = 'ok'
+                end
+
+                it "message should return a String" do
+                        @res.code_message.should be_a String
+                end
+
+                it "message should return \'ok\'" do
+                        @res.code_message.should == 'ok'
+                end
+	end
+
 	 describe "#code" do
                 before(:each) do
                         @res.code = '200 HTTP/1.1 ok'
@@ -50,7 +71,8 @@ describe HTTP::Response do
 
 	describe "#to_s" do
 		before(:each) do
-			@res.code = '200 HTTP/1.1 ok'
+			@res.code = '200'
+			@res.code_message = 'ok'
 			@res.header = { 'Content-Length' => '4' }
 			@res.body = 'body'
 		end

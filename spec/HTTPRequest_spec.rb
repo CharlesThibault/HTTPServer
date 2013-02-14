@@ -9,57 +9,96 @@ Content-Length: 4
 
 body
 REQ
-		req_str = StringIO.new str
-
-
-		@req = HTTP::Request.new(req_str)
+		@req_str = StringIO.new str			
 	end
 
 	describe "#header" do
 		it "header should return a Hash" do
-			@req.header.should be_a Hash
+			req = HTTP::Request.new(StringIO.new "")
+			req.header.should be_a Hash
 		end
 
 		it "header should be return {\'Content-Length\' => \'4\'" do
-			@req.header.should == { 'Content-Length' => '4' }
+			req = HTTP::Request.new(@req_str)
+			req.header.should == { 'Content-Length' => '4' }
+		end
+
+		it "header should be empty" do
+			req = HTTP::Request.new(StringIO.new "")
+			req.header.should be_empty
 		end			
 	end
 
 	describe "#body" do
 
 		it "body should return a String" do
-			@req.body.should be_a String
+			req = HTTP::Request.new(StringIO.new "")
+			req.body.should be_a String
 		end
 
 		it "body should return \'body\'" do
-			@req.body.should == 'body'
+			req = HTTP::Request.new(@req_str)
+			req.body.should == 'body'
+		end
+
+		it "header should be empty" do
+			req = HTTP::Request.new(StringIO.new "")
+			req.body.should be_empty
 		end
 	end
 
-	 describe "#code" do
+	 describe "#path" do
 
-                it "body should return a String" do
-                        @req.code.should be_a String
+                it "path should return a String" do
+			req = HTTP::Request.new(StringIO.new "")
+                        req.path.should be_a String
                 end
 
-                it "body should return \'GET http://localhost/toto HTTP/1.1\'" do
-                        @req.code.should == 'GET http://localhost/toto HTTP/1.1'
+                it "path should return \'http://localhost/toto\'" do
+			req = HTTP::Request.new(@req_str)
+                        req.path.should == 'http://localhost/toto'
                 end
+
+		it "path should be empty" do
+			req = HTTP::Request.new(StringIO.new "")
+			req.path.should be_empty
+		end
+        end
+
+	describe "#version" do
+
+                it "path should return a String" do
+			req = HTTP::Request.new(StringIO.new "")
+                        req.version.should be_a String
+                end
+
+                it "path should return \'HTTP/1.1\'" do
+			req = HTTP::Request.new(@req_str)
+                        req.version.should == 'HTTP/1.1'
+                end
+
+		it "path should be empty" do
+			req = HTTP::Request.new(StringIO.new "")
+			req.version.should be_empty
+		end
         end
 
 	describe "#parse_request" do
-
-		it "header should be set" do
-			@req.header.should_not be_nil
+		it "size should be called on socket" do
+			stringio_double = double(StringIO)
+			req = HTTP::Request.new(StringIO.new)
+			req.should_receive(:size)	
+			req.should_receive(:gets)
+			req = HTTP::Request.new(stringio_double)		
 		end
-
-		it "header should be egal {Content-Length => 4}" do
-			@req.header.should == {'Content-Length' => '4'}
-		end
-
 	end
 
+
 	describe "#to_s" do
+		before(:each) do
+			@req = HTTP::Request.new(@req_str)
+		end
+
 		it "to_s should return a String" do
 			@req.to_s.should be_a String
 		end
