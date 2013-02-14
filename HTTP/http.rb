@@ -29,8 +29,7 @@ module HTTP
 		end
 
 		def parse_request(socket) 
-			size = socket.size
-			if (size != 0 )		
+			if (first_line = socket.gets.chomp )		
 				# get first line
 				first_line = socket.gets.chomp
 				@action, @path, @version = first_line.split(" ")

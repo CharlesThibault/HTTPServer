@@ -1,5 +1,5 @@
 require 'socket'
-require './HTTP/http'
+require './HTTP/http.rb'
 
 port = 8080
 server = TCPServer.open(port)
@@ -30,15 +30,16 @@ loop do
   res = HTTP::Response.new
 
   if cookie = req.header["Cookie"] and session_id = cookie.split('=')[1] and sessions[session_id]
-    sessions[session_id] << "request No#{request_number}"
+    sessions[session_id] << "request No#{request_number} #{req.path}"
     res.write sessions[session_id].join("\n")
   else
     res.header["Set-Cookie"] = "session_id=#{session_id = generate_cookie}"
-    sessions[session_id] = ["request No#{request_number}"]
+    sessions[session_id] = ["request No#{request_number} #{req.path}"]
   end
   
   # response
-  res.code = "200 HTTP/1.1 ok"
+  res.code = "200"
+  res.code_message = "ok"
   socket.write res.to_s
   
   socket.close
