@@ -67,17 +67,17 @@ REQ
 
 	describe "#version" do
 
-                it "path should return a String" do
+                it "version should return a String" do
 			req = HTTP::Request.new(StringIO.new "")
                         req.version.should be_a String
                 end
 
-                it "path should return \'HTTP/1.1\'" do
+                it "version should return \'HTTP/1.1\'" do
 			req = HTTP::Request.new(@req_str)
                         req.version.should == 'HTTP/1.1'
                 end
 
-		it "path should be empty" do
+		it "version should be empty" do
 			req = HTTP::Request.new(StringIO.new "")
 			req.version.should be_empty
 		end
